@@ -1,21 +1,65 @@
-import Image from "next/image";
+"use client";
 
-export default function Home() {
+import { useQuery } from "react-query";
+
+export default function HOME() {
+  const { isLoading, data, isFetching } = useQuery("getPayment", async () => {
+    let headersList = {
+      Accept: "*/*",
+      "User-Agent": "Thunder Client (https://www.thunderclient.com)",
+    };
+
+    let response = await fetch("/api/get/getTransactions", {
+      method: "GET",
+      headers: headersList,
+    });
+
+    let data = await response.json();
+    return data;
+  });
+
   return (
-    <div>
-      <div className="hero min-h-screen bg-base-200">
-        <div className="hero-content text-center">
-          <div className="max-w-md">
-            <h1 className="text-5xl font-bold">Hello there</h1>
-            <p className="py-6">
-              Provident cupiditate voluptatem et in. Quaerat fugiat ut assumenda
-              excepturi exercitationem quasi. In deleniti eaque aut repudiandae
-              et a id nisi.
-            </p>
-            <button className="btn btn-primary">Get Started</button>
-          </div>
-        </div>
+    <>
+      <div className="overflow-x-auto">
+        <table className="table w-3/4 table-zebra mx-auto">
+          {/* head */}
+          <thead>
+            <tr>
+              <th>Payout ID</th>
+              <th>Currency</th>
+              <th>Amount(Satoshi)</th>
+              <th>Address</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            {isLoading || isFetching ? (
+              <tr>
+                <td colSpan={6} className="text-center">
+                  <div className="spinner-border" role="status">
+                    Please wait while we load all payment transaction
+                  </div>
+                </td>
+              </tr>
+            ) : (
+              data.data.map((item: any, index: number) => (
+                <tr key={index}>
+                  <td>{item.payout_id}</td>
+                  <td>
+                    {
+                      item.currency_transaction_table_currencyTocurrency
+                        .currency_code
+                    }
+                  </td>
+                  <td>{item.amount}</td>
+                  <td>{item.to}</td>
+                  <td>{`${item.status == 200 ? "Sent" : "Failed"}`}</td>
+                </tr>
+              ))
+            )}
+          </tbody>
+        </table>
       </div>
-    </div>
+    </>
   );
 }

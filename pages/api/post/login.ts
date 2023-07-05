@@ -30,20 +30,26 @@ export default async function handler(
           username: username,
         },
       });
-
+      console.log(user);
       const dBpassword = user.password || "";
       const isValid = await bcrypt.compare(password, dBpassword);
       if (isValid) {
-        const token = jwt.sign({ username: username }, JWT_KEY);
+        const token = jwt.sign(
+          { username: username, user_id: user.id },
+          JWT_KEY
+        );
         res.setHeader("Set-Cookie", `auth=${token}; path=/; max-age=2592000;`);
-
+        prisma.$disconnect();
         return res.status(200).json({ code: 200, message: "Login success" });
       } else {
+        prisma.$disconnect();
         return res
           .status(400)
           .json({ code: 400, message: "Password incorrect" });
       }
     } catch (e) {
+      console.log(e);
+      prisma.$disconnect();
       return res.status(400).json({ code: 400, message: "User not found" });
     }
   }
