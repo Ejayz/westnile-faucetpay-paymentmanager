@@ -11,12 +11,6 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  useEffect(() => {
-    if (!document.cookie.includes("auth")) {
-      window.location.href = "/login?error=401";
-    }
-  }, []);
-
   const queryClient = new QueryClient();
 
   return (
@@ -38,7 +32,7 @@ export default function RootLayout({
                         pathname: "/login",
                       }}
                     >
-                     Login
+                      Login
                     </Link>
                   </li>
                 </ul>

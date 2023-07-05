@@ -18,7 +18,7 @@ export default async function handler(
         currency_transaction_table_currencyTocurrency: true,
       },
     });
-    console.log(transactions);
+
     return res.status(200).json({ code: 200, data: transactions });
   } catch (e) {
     return res.status(400).json({ code: 400, message: "Something went wrong" });
