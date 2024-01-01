@@ -17,6 +17,8 @@ export default async function handler(
       include: {
         currency_transaction_table_currencyTocurrency: true,
       },
+      skip:0,
+      take:15,
     });
 
     return res.status(200).json({ code: 200, data: transactions });
