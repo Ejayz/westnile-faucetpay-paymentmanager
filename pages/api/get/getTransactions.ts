@@ -22,8 +22,8 @@ export default async function handler(
     });
 
     return res.status(200).json({ code: 200, data: transactions });
-  } catch (e) {
-    return res.status(400).json({ code: 400, message: e.message });
+  } catch (e:any) {
+    return res.status(400).json({ code: 400, message: e });
   } finally {
     prisma.$disconnect();
   }
