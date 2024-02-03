@@ -14,6 +14,8 @@ model currency {
   currency_name                                          String?             @db.VarChar
   currency_code                                          String?             @db.VarChar
   is_exist                                               Boolean?
+  per_hash                                               Float?              @db.Real
+  rate                                                   Float?              @db.Real
   transaction_table_transaction_table_currencyTocurrency transaction_table[] @relation("transaction_table_currencyTocurrency")
 }
 
@@ -41,5 +43,16 @@ model users {
   username          String?             @db.VarChar
   password          String?
   is_exist          Boolean?
+  balance_hash      Float?              @db.Real
   transaction_table transaction_table[]
+}
+
+model minners_account {
+  id               Int       @id @default(autoincrement()) @db.SmallInt
+  created_at       DateTime? @default(now()) @db.Timestamptz(6)
+  username         String?   @db.VarChar
+  password         String?
+  is_exist         Boolean?
+  balance_hash     Float?    @db.Real
+  balance_check_at DateTime? @db.Timestamptz(6)
 }

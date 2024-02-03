@@ -12,13 +12,15 @@ export default async function handler(
       message: "Invalid method. This endpoint only accept POST method",
     });
   }
-  const { currency_name, currency_code } = req.body;
+  const { currency_name, currency_code,rate,per_hash } = req.body;
   const prisma = new PrismaClient();
   try {
     const addCurrency = await prisma.currency.create({
       data: {
         currency_name: currency_name,
         currency_code: currency_code,
+        rate:rate,
+        per_hash:per_hash,
         is_exist: true,
       },
     });
