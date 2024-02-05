@@ -1,6 +1,6 @@
 generator client {
   provider = "prisma-client-js"
- output   = "./generated/client"
+  output   = "./generated/client"
 }
 
 datasource db {
@@ -22,19 +22,22 @@ model currency {
 
 /// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
 model transaction_table {
-  id                                            Int       @id @default(autoincrement()) @db.SmallInt
-  created_at                                    DateTime? @default(now()) @db.Timestamptz(6)
+  id                                            Int              @id @default(autoincrement()) @db.SmallInt
+  created_at                                    DateTime?        @default(now()) @db.Timestamptz(6)
   amount                                        Float?
-  currency                                      Int?      @db.SmallInt
-  to                                            String?
+  currency                                      Int?             @db.SmallInt
+  to_user                                       String?
   current_balance                               Float?
   status                                        String?
   payout_user_hash                              String?
   payout_id                                     String?
   referral                                      Boolean?
-  user                                          Int?      @db.SmallInt
-  currency_transaction_table_currencyTocurrency currency? @relation("transaction_table_currencyTocurrency", fields: [currency], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  users                                         users?    @relation(fields: [user], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  user                                          Int?             @db.SmallInt
+  hash_number                                   Float?           @db.Real
+  minner_id                                     Int?             @db.SmallInt
+  currency_transaction_table_currencyTocurrency currency?        @relation("transaction_table_currencyTocurrency", fields: [currency], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  minners_account                               minners_account? @relation(fields: [minner_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  users                                         users?           @relation(fields: [user], references: [id], onDelete: NoAction, onUpdate: NoAction)
 }
 
 /// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
@@ -49,11 +52,22 @@ model users {
 }
 
 model minners_account {
-  id               Int       @id @default(autoincrement()) @db.SmallInt
-  created_at       DateTime? @default(now()) @db.Timestamptz(6)
-  username         String?   @db.VarChar
-  password         String?
-  is_exist         Boolean?
-  balance_hash     Float?    @db.Real
-  balance_check_at DateTime? @db.Timestamptz(6)
+  id                Int                 @id @default(autoincrement()) @db.SmallInt
+  created_at        DateTime?           @default(now()) @db.Timestamptz(6)
+  email             String?             @db.VarChar
+  password          String?
+  is_exist          Boolean?            @default(true)
+  balance_hash      Float?              @default(0) @db.Real
+  balance_check_at  DateTime?           @db.Timestamptz(6)
+  total_hashes      Float?              @default(0) @db.Real
+  updated_at        DateTime?           @db.Timestamptz(6)
+  transaction_table transaction_table[]
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model payment_manager_options {
+  id               BigInt   @id(map: "payment_manage_options_pkey") @default(autoincrement())
+  created_at       DateTime @default(now()) @db.Timestamptz(6)
+  auto_transaction Boolean? @default(false)
+  is_exist         Boolean? @default(true)
 }
