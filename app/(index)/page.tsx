@@ -52,7 +52,7 @@ export default function HOME() {
                     }
                   </td>
                   <td>{item.amount}</td>
-                  <td>{item.to}</td>
+                  <td>{item.to_user}</td>
                   <td>{`${item.status == 200 ? "Sent" : "Failed"}`}</td>
                 </tr>
               ))
