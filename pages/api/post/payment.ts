@@ -65,7 +65,7 @@ export default async function handler(
       const insertData = await prisma.transaction_table.create({
         data: {
           amount: parseFloat(amount),
-          to: to,
+          to_user: to,
           current_balance: parseFloat(data.balance),
           currency_transaction_table_currencyTocurrency: {
             connect: { id: getCurrency.id },
