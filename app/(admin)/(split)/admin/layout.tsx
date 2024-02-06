@@ -1,6 +1,6 @@
 "use client";
 import { ToastContainer } from "react-toastify";
-import "../../../globals.css";
+import "../../../../styles/globals.css";
 import "react-toastify/dist/ReactToastify.css";
 import Link from "next/link";
 import { useEffect } from "react";
@@ -23,15 +23,15 @@ export default function RootLayout({
     <html lang="en">
       <body>
         <QueryClientProvider client={queryClient}>
-          <div className="bg-base-100 w-full h-full">
+          <div className="w-full h-full bg-base-100">
             <div className="navbar bg-base-100">
               <div className="flex-1">
-                <a className="btn btn-ghost normal-case text-xl">
+                <a className="text-xl normal-case btn btn-ghost">
                   Westnile Payment Manager
                 </a>
               </div>
               <div className="flex-none">
-                <ul className="menu menu-horizontal px-1">
+                <ul className="px-1 menu menu-horizontal">
                   <li>
                     <Link
                       href={{
