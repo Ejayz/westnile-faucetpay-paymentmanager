@@ -26,8 +26,7 @@ export default async function handler(
   const token = cookie.auth || "";
   const decodeCookie = jwt.decode(token) as { [key: string]: any };
   console.log(req.body);
-  const { transactionId, minner_id, hash_number } = req.body;
-  console.log(transactionId);
+  const { transactionId, minner_id, balance_hash } = req.body;
   const prisma = new PrismaClient();
   try {
     const verify = jwt.verify(token, jwt_key);
@@ -42,8 +41,11 @@ export default async function handler(
         id: minner_id,
       },
     });
-
-    const getTotalMinner = getMinnerAccount?.balance_hash + hash_number;
+    console.log(getMinnerAccount?.balance_hash);
+    console.log(balance_hash);
+    const getTotalMinner =
+      Number(getMinnerAccount?.balance_hash) + Number(balance_hash);
+    console.log(getTotalMinner);
     const updateMinnerAccount = await prisma.minners_account.update({
       where: {
         id: minner_id,
@@ -52,6 +54,8 @@ export default async function handler(
         balance_hash: getTotalMinner,
       },
     });
+    console.log(updateMinnerAccount);
+
     const updateTransaction = await prisma.transaction_table.update({
       where: {
         id: transactionId,
