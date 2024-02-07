@@ -80,8 +80,8 @@ export default function Page() {
 
       let bodyContent = JSON.stringify({
         transactionId: values.transactionId,
-        status: values.status,
-        to_user: values.to_user,
+        balance_hash: values.balance_hash,
+        minner_id: values.minner_id,
       });
 
       let response = await fetch(
@@ -197,8 +197,8 @@ export default function Page() {
                         ) {
                           transactionDenyMutation.mutate({
                             transactionId: item.id,
-                            status: item.status,
-                            to_user: item.to_user,
+                            balance_hash: item.hash_number,
+                            minner_id: item.minner_id,
                           });
                         }
                       }}

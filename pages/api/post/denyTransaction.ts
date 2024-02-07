@@ -26,7 +26,7 @@ export default async function handler(
   const token = cookie.auth || "";
   const decodeCookie = jwt.decode(token) as { [key: string]: any };
   console.log(req.body);
-  const { transactionId, status, to_user } = req.body;
+  const { transactionId, minner_id, hash_number } = req.body;
   console.log(transactionId);
   const prisma = new PrismaClient();
   try {
@@ -37,6 +37,21 @@ export default async function handler(
         message: "Unauthorized",
       });
     }
+    const getMinnerAccount = await prisma.minners_account.findFirst({
+      where: {
+        id: minner_id,
+      },
+    });
+
+    const getTotalMinner = getMinnerAccount?.balance_hash + hash_number;
+    const updateMinnerAccount = await prisma.minners_account.update({
+      where: {
+        id: minner_id,
+      },
+      data: {
+        balance_hash: getTotalMinner,
+      },
+    });
     const updateTransaction = await prisma.transaction_table.update({
       where: {
         id: transactionId,
