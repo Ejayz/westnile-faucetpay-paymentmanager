@@ -121,7 +121,7 @@ export default function Page() {
     if (datas.code == 200) {
       CurrencyRefetch();
       toast.success("Token updated successfully!");
-     setIsRemove(false);
+      setIsRemove(false);
       reset();
     } else {
       CurrencyRefetch;
@@ -390,7 +390,9 @@ export default function Page() {
                       Edit
                     </button>
                     <button
-                      className={`mx-2 my-2 btn btn-sm ${isRemove? "btn-disabled" : "btn-error"}`}
+                      className={`mx-2 my-2 btn btn-sm ${
+                        isRemove ? "btn-disabled" : "btn-error"
+                      }`}
                       onClick={() => {
                         OnRemove({ id: item.id });
                       }}
