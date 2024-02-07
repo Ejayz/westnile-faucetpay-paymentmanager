@@ -19,6 +19,9 @@ export default async function handler(
       },
       skip:0,
       take:15,
+      orderBy:{
+        id:"desc"
+      }
     });
 
     return res.status(200).json({ code: 200, data: transactions });

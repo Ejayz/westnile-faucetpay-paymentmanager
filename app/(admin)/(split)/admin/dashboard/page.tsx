@@ -53,7 +53,13 @@ export default function Page() {
                   </td>
                   <td>{item.amount}</td>
                   <td>{item.to_user}</td>
-                  <td>{`${item.status == 200 ? "Sent" : "Failed"}`}</td>
+                  <td>{`${
+                    item.status == 200
+                      ? "Sent"
+                      : item.status == 201
+                      ? "Denied"
+                      : "Pending"
+                  }`}</td>
                 </tr>
               ))
             )}

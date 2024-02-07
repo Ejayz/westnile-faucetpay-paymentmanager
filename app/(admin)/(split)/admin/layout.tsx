@@ -44,6 +44,15 @@ export default function RootLayout({
                   <li>
                     <Link
                       href={{
+                        pathname: "/admin/miner_transaction",
+                      }}
+                    >
+                      Miner Transaction
+                    </Link>
+                  </li>
+                  <li>
+                    <Link
+                      href={{
                         pathname: "/admin/payment",
                       }}
                     >
@@ -67,6 +76,16 @@ export default function RootLayout({
                       }}
                     >
                       Change Password{" "}
+                    </Link>
+                  </li>
+                  
+                  <li>
+                    <Link
+                      href={{
+                        pathname: "/admin/setting",
+                      }}
+                    >
+                     Setting
                     </Link>
                   </li>
                   <li>

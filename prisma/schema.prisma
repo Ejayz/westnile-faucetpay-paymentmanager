@@ -21,7 +21,7 @@ model currency {
 
 /// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
 model transaction_table {
-  id                                            Int              @id @default(autoincrement()) @db.SmallInt
+  id                                            Int              @id @unique @default(autoincrement()) @db.SmallInt
   created_at                                    DateTime?        @default(now()) @db.Timestamptz(6)
   amount                                        Float?
   currency                                      Int?             @db.SmallInt
@@ -69,4 +69,5 @@ model payment_manager_options {
   created_at       DateTime @default(now()) @db.Timestamptz(6)
   auto_transaction Boolean? @default(false)
   is_exist         Boolean? @default(true)
+  name             String?
 }

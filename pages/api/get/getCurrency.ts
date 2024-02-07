@@ -22,6 +22,8 @@ export default async function handler(
         id: true,
         currency_name: true,
         currency_code: true,
+        per_hash: true,
+        rate: true,
       },
     });
     return res.status(200).json({
