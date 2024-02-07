@@ -5,6 +5,9 @@ import * as jwt from "jsonwebtoken";
 dotenv.config();
 const api_key = process.env.FAUCET_PAY_API || "";
 const jwt_key = process.env.JWT_KEY || "";
+const COIN_IMP_PUBLIC = process.env.COIN_IMP_PUBLIC || "";
+const COIN_IMP_PRIVATE = process.env.COIN_IMP_PRIVATE || "";
+const SITE_KEY = process.env.SITE_KEY || "";
 
 export default async function handler(
   req: NextApiRequest,
@@ -40,7 +43,7 @@ export default async function handler(
         currency_transaction_table_currencyTocurrency: true,
       },
     });
-    console.log(transaction)
+    console.log(transaction);
     if (transaction) {
       if (
         transaction.amount == null ||
@@ -75,6 +78,7 @@ export default async function handler(
       });
 
       let data = await response.json();
+      console.log(data);
       if (data.status == 200) {
         const insertData = await prisma.transaction_table.update({
           where: {
@@ -88,19 +92,47 @@ export default async function handler(
             users: { connect: { id: decodeCookie.user_id } },
           },
         });
-        console.log(insertData);
-        return res.status(200).json({
-          code: 200,
-          message:
-            "Transaction sent. Please check faucet pay account if credited . Thank you",
-        });
+        let headerssList = {
+          Accept: "*/*",
+          "User-Agent": "Thunder Client (https://www.thunderclient.com)",
+          "X-API-ID": COIN_IMP_PUBLIC,
+          "X-API-KEY": COIN_IMP_PRIVATE,
+          "Content-Type": "application/x-www-form-urlencoded",
+        };
+
+        let bodysContent = `site-key=${SITE_KEY}&user=${transaction.minner_id}&amount=${transaction.hash_number}`;
+
+        let responses = await fetch(
+          "https://www.coinimp.com/api/v2/user/withdraw",
+          {
+            method: "POST",
+            body: bodysContent,
+            headers: headerssList,
+          }
+        );
+
+        let datas = await responses.json();
+        console.log(datas);
+        if (datas.status == "success") {
+          return res.status(200).json({
+            code: 200,
+            message:
+              "Transaction confirmed.Please check your faucetpay account if deducted or not. If not, please contact support",
+          });
+        } else {
+          return res
+            .status(400)
+            .json({
+              code: 400,
+              message:
+                "Transaction confirmed but deduction on coinimp fails.Please check your faucetpay account if deducted or not. If not, please contact support ",
+            });
+        }
       } else {
-        return res.status(400).json({ code: 400, message: data.message });
+        return res
+          .status(404)
+          .json({ code: 404, message: "Transaction not found" });
       }
-    } else {
-      return res
-        .status(404)
-        .json({ code: 404, message: "Transaction not found" });
     }
   } catch (e: any) {
     console.log(e);
