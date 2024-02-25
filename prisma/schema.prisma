@@ -70,4 +70,5 @@ model payment_manager_options {
   auto_transaction Boolean? @default(false)
   is_exist         Boolean? @default(true)
   name             String?
+  maintenance_mode Boolean?
 }

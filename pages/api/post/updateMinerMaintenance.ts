@@ -10,7 +10,7 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  if (req.method !== "GET") {
+  if (req.method !== "POST") {
     return res.status(405).json({
       code: 405,
       message: "Invalid method. This endpoint only accept POST method",
@@ -37,24 +37,24 @@ export default async function handler(
         message: "Unauthorized",
       });
     }
-    const getAutoWithdraw = await prisma.payment_manager_options.findFirst({
+    const updateTransaction = await prisma.payment_manager_options.updateMany({
       where: {
         id: 1,
+        name: "setting",
+      },
+      data: {
+        maintenance_mode: status,
       },
     });
-    if (getAutoWithdraw) {
+    if (updateTransaction) {
       return res.status(200).json({
         code: 200,
-        message: "Auto withdraw options",
-        data: {
-          auto_withdaw:getAutoWithdraw.auto_transaction,
-          minner_maintenance:getAutoWithdraw.maintenance_mode,
-        },
+        message: "Auto withdraw options updated",
       });
     }
     return res.status(400).json({
       code: 400,
-      message: "Invalid auto withdraw options",
+      message: "Auto withdraw options not updated",
     });
   } catch (error) {
     console.log(error);
