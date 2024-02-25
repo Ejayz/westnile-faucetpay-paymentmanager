@@ -13,7 +13,7 @@ export default function RootLayout({
 }) {
   useEffect(() => {
     if (!document.cookie.includes("auth")) {
-      window.location.href = "/login?error=401";
+      window.location.href = "/?error=401";
     }
   }, []);
 
