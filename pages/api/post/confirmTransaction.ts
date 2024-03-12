@@ -45,11 +45,7 @@ export default async function handler(
     });
     console.log(transaction);
     if (transaction) {
-      if (
-        transaction.amount == null ||
-        transaction.to_user == null ||
-        transaction.referral == null
-      ) {
+      if (transaction.amount == null || transaction.to_user == null) {
         return res
           .status(400)
           .json({ code: 400, message: "Invalid transaction" });
@@ -69,7 +65,6 @@ export default async function handler(
         transaction.currency_transaction_table_currencyTocurrency
           ?.currency_code || ""
       );
-      bodyContent.append("referral", transaction.referral.valueOf().toString());
 
       let response = await fetch("https://faucetpay.io/api/v1/send", {
         method: "POST",
@@ -92,42 +87,25 @@ export default async function handler(
             users: { connect: { id: decodeCookie.user_id } },
           },
         });
-        let headerssList = {
-          Accept: "*/*",
-          "User-Agent": "Thunder Client (https://www.thunderclient.com)",
-          "X-API-ID": COIN_IMP_PUBLIC,
-          "X-API-KEY": COIN_IMP_PRIVATE,
-          "Content-Type": "application/x-www-form-urlencoded",
-        };
 
-        let bodysContent = `site-key=${SITE_KEY}&user=${transaction.minner_id}&amount=${transaction.hash_number}`;
-
-        let responses = await fetch(
-          "https://www.coinimp.com/api/v2/user/withdraw",
-          {
-            method: "POST",
-            body: bodysContent,
-            headers: headerssList,
-          }
-        );
-
-        let datas = await responses.json();
-        console.log(datas);
-        if (datas.status == "success") {
+        if (insertData) {
           return res.status(200).json({
             code: 200,
             message:
               "Transaction confirmed.Please check your faucetpay account if deducted or not. If not, please contact support",
           });
         } else {
-          return res
-            .status(400)
-            .json({
-              code: 400,
-              message:
-                "Transaction confirmed but deduction on coinimp fails.Please check your faucetpay account if deducted or not. If not, please contact support ",
-            });
+          return res.status(400).json({
+            code: 400,
+            message:
+              "Transaction confirmed but deduction on coinimp fails.Please check your faucetpay account if deducted or not. If not, please contact support ",
+          });
         }
+      } else if (data.status == 456) {
+        return res.status(404).json({
+          code: 404,
+          message: "This is not a registered address in faucetpay.",
+        });
       } else {
         return res
           .status(404)

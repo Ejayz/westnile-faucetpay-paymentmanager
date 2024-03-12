@@ -20,6 +20,9 @@ export default async function handler(
       include: {
         currency_transaction_table_currencyTocurrency: true,
       },
+      orderBy:{
+        created_at: 'desc'
+      },
       skip: 0,
       take: 15,
     });
