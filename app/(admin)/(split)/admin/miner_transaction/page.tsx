@@ -42,7 +42,7 @@ export default function Page() {
       });
 
       let response = await fetch(
-        "http://localhost:3000/api/post/confirmTransaction",
+        "/api/post/confirmTransaction",
         {
           method: "POST",
           body: bodyContent,
@@ -85,7 +85,7 @@ export default function Page() {
       });
 
       let response = await fetch(
-        "http://localhost:3000/api/post/denyTransaction",
+        "/api/post/denyTransaction",
         {
           method: "POST",
           body: bodyContent,
